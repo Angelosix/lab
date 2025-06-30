@@ -122,8 +122,12 @@ class InvisCloak (Algorithm):
             Hier steht Ihr Code zu Aufgabe 2.2.1 (RGB)
             - Histogrammberechnung und Analyse
         """
+        #Save image to directory
+        cv2.imwrite("./data/Saved_Image.png", img)
+
         channels = cv2.split(img)
         col = ['b','g','r']
+
         for i in range(len(channels)):
             hist = cv2.calcHist(channels[i], [i], None, [256], [0, 256])
             plt.clf()
@@ -144,7 +148,7 @@ class InvisCloak (Algorithm):
         h,s,v = cv2.split(hsv)
 
         #plot hue
-        hist = cv2.calcHist(h, [0], None, [180], [0, 180])
+        hist = cv2.calcHist(h, [0], None, [180], [0, 179])
         plt.clf()
         plt.plot(hist, color='black')
         plt.xlim([0, 256])
@@ -152,15 +156,15 @@ class InvisCloak (Algorithm):
         plt.close()
 
         #plot saturation
-        hist = cv2.calcHist(s, [0], None, [256], [0, 256])
+        hist = cv2.calcHist(s, [0], None, [256], [0, 255])
         plt.clf()
         plt.plot(hist)
         plt.xlim([0, 256])
         plt.savefig("./data/Hist_S.png")
         plt.close()
 
-        # plot saturation
-        hist = cv2.calcHist(v, [0], None, [256], [0, 256])
+        # plot value
+        hist = cv2.calcHist(v, [0], None, [256], [0, 255])
         plt.clf()
         plt.plot(hist)
         plt.xlim([0, 256])

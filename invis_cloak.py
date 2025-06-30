@@ -12,6 +12,7 @@ class InvisCloak (Algorithm):
     def __init__(self):
         self.N = 5  # Number of frames to average
         self.frame_buffer = []
+        self.last_clicked_img = None
 
 
     """ Processes the input image"""
@@ -30,13 +31,13 @@ class InvisCloak (Algorithm):
 
         """ 2.1.2 HistogrammSpreizung """
         img = self._212_HistogrammSpreizung(img)
-
+        self.last_clicked_img = img
 
         """ 2.2 Farbanalyse """
         """ 2.2.1 RGB """
-        self._221_RGB(img)
+        #self._221_RGB(img)
         """ 2.2.2 HSV """
-        self._222_HSV(img)
+        #self._222_HSV(img)
 
 
         """ 2.3 Segmentierung und Bildmdifikation """
@@ -48,6 +49,9 @@ class InvisCloak (Algorithm):
     def mouse_callback(self, event, x, y, flags, param):
         if event == cv2.EVENT_LBUTTONUP:
             print("A Mouse click happend! at position", x, y)
+        if event == cv2.EVENT_LBUTTONUP:
+            print(f"Mouse click at ({x}, {y}) — captured image for RGB histogram.")
+            self._221_RGB(self.last_clicked_img)
 
     def _plotNoise(self, img, name:str):
         height, width = np.array(img.shape[:2])
@@ -116,17 +120,16 @@ class InvisCloak (Algorithm):
             Hier steht Ihr Code zu Aufgabe 2.2.1 (RGB)
             - Histogrammberechnung und Analyse
         """
-        self.saved_image = img
+
         channels = cv2.split(img)
         col = ['b','g','r']
-
         for i in range(len(channels)):
             hist = cv2.calcHist(channels[i], [i], None, [256], [0, 256])
             plt.clf()
             plt.plot(hist, color=col[i])
             plt.xlim([0, 256])
             plt.savefig("./data/Hist_"+col[i].upper()+".png")
-            plt.show()
+            plt.close()
 
 
 

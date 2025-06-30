@@ -75,14 +75,29 @@ class InvisCloak (Algorithm):
         return avg_img
 
     def _212_HistogrammSpreizung(self, img):
-        """
-            Hier steht Ihr Code zu Aufgabe 2.1.2 (Histogrammspreizung)
-            - Transformation HSV
-            - Histogrammspreizung berechnen
-            - Transformation BGR
-        """
+        # Convert BGR to HSV
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-        return img
+        # Split HSV channels
+        h, s, v = cv2.split(hsv)
+
+        # Calculate min and max of V channel
+        min_v = np.min(v)
+        max_v = np.max(v)
+
+        # Avoid division by zero
+        if max_v - min_v == 0:
+            return img
+
+        # Apply histogram stretching to V channel
+        v_stretched = ((v - min_v) / (max_v - min_v) * 255).astype(np.uint8)
+
+        # Merge channels back and convert to BGR
+        hsv_stretched = cv2.merge([h, s, v_stretched])
+        img_stretched = cv2.cvtColor(hsv_stretched, cv2.COLOR_HSV2BGR)
+
+        return img_stretched
+
 
     def _221_RGB(self, img):
         """

@@ -52,6 +52,8 @@ class InvisCloak (Algorithm):
         if event == cv2.EVENT_LBUTTONUP:
             print(f"Mouse click at ({x}, {y}) — captured image for RGB histogram.")
             self._221_RGB(self.last_clicked_img)
+            print(f"Mouse click at ({x}, {y}) — captured image for HSV histogram.")
+            self._222_HSV(self.last_clicked_img)
 
     def _plotNoise(self, img, name:str):
         height, width = np.array(img.shape[:2])
@@ -120,7 +122,6 @@ class InvisCloak (Algorithm):
             Hier steht Ihr Code zu Aufgabe 2.2.1 (RGB)
             - Histogrammberechnung und Analyse
         """
-
         channels = cv2.split(img)
         col = ['b','g','r']
         for i in range(len(channels)):
@@ -138,7 +139,37 @@ class InvisCloak (Algorithm):
             Hier steht Ihr Code zu Aufgabe 2.2.2 (HSV)
             - Histogrammberechnung und Analyse im HSV-Raum
         """
-        pass
+        #Convert to HSV and split channels
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        h,s,v = cv2.split(hsv)
+
+        #plot hue
+        hist = cv2.calcHist(h, [0], None, [180], [0, 180])
+        plt.clf()
+        plt.plot(hist, color='black')
+        plt.xlim([0, 256])
+        plt.savefig("./data/Hist_H.png")
+        plt.close()
+
+        #plot saturation
+        hist = cv2.calcHist(s, [0], None, [256], [0, 256])
+        plt.clf()
+        plt.plot(hist)
+        plt.xlim([0, 256])
+        plt.savefig("./data/Hist_S.png")
+        plt.close()
+
+        # plot saturation
+        hist = cv2.calcHist(v, [0], None, [256], [0, 256])
+        plt.clf()
+        plt.plot(hist)
+        plt.xlim([0, 256])
+        plt.savefig("./data/Hist_V.png")
+        plt.close()
+
+
+
+
 
 
     def _23_SegmentUndBildmodifizierung (self, img):

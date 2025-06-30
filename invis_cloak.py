@@ -11,6 +11,7 @@ class InvisCloak (Algorithm):
     """ init function """
     def __init__(self):
         self.N = 5  # Number of frames to average
+        self.sum_images = 0
         self.frame_buffer = []
         self.last_clicked_img = None
 
@@ -123,7 +124,7 @@ class InvisCloak (Algorithm):
             - Histogrammberechnung und Analyse
         """
         #Save image to directory
-        cv2.imwrite("./data/Saved_Image.png", img)
+        cv2.imwrite("./data/Saved_Image"+str(self.sum_images)+".png", img)
 
         channels = cv2.split(img)
         col = ['b','g','r']
@@ -133,7 +134,7 @@ class InvisCloak (Algorithm):
             plt.clf()
             plt.plot(hist, color=col[i])
             plt.xlim([0, 256])
-            plt.savefig("./data/Hist_"+col[i].upper()+".png")
+            plt.savefig("./data/Hist_"+col[i].upper()+str(self.sum_images)+".png")
             plt.close()
 
 
@@ -152,7 +153,7 @@ class InvisCloak (Algorithm):
         plt.clf()
         plt.plot(hist, color='black')
         plt.xlim([0, 256])
-        plt.savefig("./data/Hist_H.png")
+        plt.savefig("./data/Hist_H"+str(self.sum_images)+".png")
         plt.close()
 
         #plot saturation
@@ -160,7 +161,7 @@ class InvisCloak (Algorithm):
         plt.clf()
         plt.plot(hist)
         plt.xlim([0, 256])
-        plt.savefig("./data/Hist_S.png")
+        plt.savefig("./data/Hist_S"+str(self.sum_images)+".png")
         plt.close()
 
         # plot value
@@ -168,9 +169,9 @@ class InvisCloak (Algorithm):
         plt.clf()
         plt.plot(hist)
         plt.xlim([0, 256])
-        plt.savefig("./data/Hist_V.png")
+        plt.savefig("./data/Hist_V"+str(self.sum_images)+".png")
         plt.close()
-
+        self.sum_images += 1
 
 
 

@@ -13,6 +13,7 @@ class InvisCloak (Algorithm):
         self.N = 5  # Number of frames to average
         self.frame_buffer = []
 
+
     """ Processes the input image"""
     def process(self, img):
 
@@ -21,10 +22,12 @@ class InvisCloak (Algorithm):
         plotNoise = True   # Schaltet die Rauschvisualisierung ein
         if plotNoise:
             self._plotNoise(img, "Rauschen vor Korrektur")
-
         img = self._211_Rauschreduktion(img)
         if plotNoise:
             self._plotNoise(img, "Rauschen nach Korrektur")
+
+
+
         """ 2.1.2 HistogrammSpreizung """
         img = self._212_HistogrammSpreizung(img)
 
@@ -62,7 +65,10 @@ class InvisCloak (Algorithm):
         cv2.waitKey(1)
 
     def _211_Rauschreduktion(self, img):
-
+        """
+            Hier steht Ihr Code zu Aufgabe 2.1.1 (Rauschunterdrückung)
+            - Implementierung Mittelwertbildung über N Frames
+        """
         img_float = img.astype(np.float32)
 
         self.frame_buffer.append(img_float)
@@ -75,6 +81,12 @@ class InvisCloak (Algorithm):
         return avg_img
 
     def _212_HistogrammSpreizung(self, img):
+        """
+            Hier steht Ihr Code zu Aufgabe 2.1.2 (Histogrammspreizung)
+            - Transformation HSV
+            - Histogrammspreizung berechnen
+            - Transformation BGR
+        """
         # Convert BGR to HSV
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
@@ -104,7 +116,18 @@ class InvisCloak (Algorithm):
             Hier steht Ihr Code zu Aufgabe 2.2.1 (RGB)
             - Histogrammberechnung und Analyse
         """
-        pass
+        self.saved_image = img
+        channels = cv2.split(img)
+        col = ['b','g','r']
+
+        for i in range(len(channels)):
+            hist = cv2.calcHist(channels[i], [i], None, [256], [0, 256])
+            plt.clf()
+            plt.plot(hist, color=col[i])
+            plt.xlim([0, 256])
+            plt.savefig("./data/Hist_"+col[i].upper()+".png")
+            plt.show()
+
 
 
     def _222_HSV(self, img):
